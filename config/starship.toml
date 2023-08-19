@@ -1,0 +1,48 @@
+# Note you can use ansi colors: https://i.stack.imgur.com/KTSQa.png
+
+right_format = "${cmd_duration}${status}"
+
+[username]
+disabled = true
+
+[hostname]
+format = '[lm]($style) | '
+style = 'bold 213'
+# disabled = true
+
+[status]
+disabled = false
+pipestatus = true
+symbol = 'x'
+# success_symbol = '✓'
+style = 'dimmed 248'
+format = ' [$symbol$status]($style)'
+
+[directory]
+style = 'bold red'
+
+[git_branch]
+symbol = ''
+format = '| [$symbol$branch(:$remote_branch)]($style) '
+style = 'bold green'
+
+[python]
+# symbol = ''
+format = '| [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+style = 'bold yellow'
+detect_files = []
+
+[package]
+# symbol = ''
+format = '| [$symbol$version]($style) '
+style = 'bold blue'
+
+[cmd_duration]
+format = '[$duration]($style)'
+style = 'dimmed bold 141'
+min_time = 0
+
+[rust]
+# symbol = ''
+format = '| [$symbol($version )]($style)'
+style = 'bold red'
