@@ -54,3 +54,7 @@ bindkey '^E' end-of-line
 bindkey '^y' autosuggest-accept
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# disable annoying confirmation step of '!!' and '!$'
+# https://superuser.com/a/714471
+unsetopt HIST_VERIFY
