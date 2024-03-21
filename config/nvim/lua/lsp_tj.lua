@@ -112,10 +112,15 @@ lspconfig.clangd.setup{
         "clangd",
         "--offset-encoding=utf-16",
     },
+    init_options = {
+        compilationDatabasePath = './build/debug'
+    }
 }
 
 
 lspconfig.lua_ls.setup{
+    capabilities = capabilities,
+    on_attach = on_attach,
     cmd = { "/home/tsmart/Programs/lua-language-server/bin/lua-language-server" },
     settings = {
         Lua = { diagnostics = { globals = { 'vim' } } }
@@ -129,4 +134,57 @@ lspconfig.rust_analyzer.setup{
 }
 
 
-require'lspconfig'.tsserver.setup{}
+lspconfig.tsserver.setup{
+    capabilities = capabilities,
+    on_attach = on_attach,
+}
+
+
+local tailwindcss_on_attach = function(client, bufnr)
+    on_attach(client, bufnr)
+
+    -- according to https://github.com/themaxmarchuk/tailwindcss-colors.nvim#enabling-the-plugin
+    require("tailwindcss-colors").buf_attach(bufnr)
+end
+
+lspconfig.tailwindcss.setup{
+    capabilities = capabilities,
+    on_attach = tailwindcss_on_attach,
+}
+
+lspconfig.yamlls.setup {
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = {
+        yaml = {
+            schemas = {
+                ["/home/tsmart/schemas/tide_schema.json"] = "*.tide.yml",
+                ["/home/tsmart/work/npsg-internal-tools/tide/tmp_schema.json"] = "*.tmp.yml",
+                ["https://squidfunk.github.io/mkdocs-material/schema.json"] = "mkdocs.yml",
+            },
+            -- customTags = {
+            --     "!imp",
+            -- },
+        },
+    }
+}
+
+lspconfig.gopls.setup {
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = {
+        gopls = {
+            gofumpt = true,
+        },
+    },
+}
+
+lspconfig.golangci_lint_ls.setup {
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = {
+        gopls = {
+            gofumpt = true,
+        },
+    },
+}

@@ -57,7 +57,7 @@ return require('packer').startup(function(use)
 
     -- treesitter
     use 'nvim-treesitter/nvim-treesitter'
-    use 'nvim-treesitter/nvim-treesitter-context'
+    -- use 'nvim-treesitter/nvim-treesitter-context'
 
     -- debugging
     use 'mfussenegger/nvim-dap'
@@ -68,13 +68,22 @@ return require('packer').startup(function(use)
     use 'mhartington/formatter.nvim'
 
     -- file tree
-    use {
-        'kyazdani42/nvim-tree.lua',
-        requires = {
-            'kyazdani42/nvim-web-devicons', -- optional, for file icons
-        },
-        tag = 'nightly' -- optional, updated every week. (see issue #1193)
-    }
+    -- use {
+    --     'kyazdani42/nvim-tree.lua',
+    --     requires = {
+    --         'kyazdani42/nvim-web-devicons', -- optional, for file icons
+    --     },
+    --     tag = 'nightly', -- optional, updated every week. (see issue #1193)
+    --     config = function()
+    --         require("nvim-tree").setup{
+    --             filters = {
+    --                 custom = {"~formatter.*", "__pycache__", ".git", "venv"},
+    --             },
+    --         }
+    --     end,
+    -- }
+
+    use "stevearc/oil.nvim"
 
     -- zen
     use({
@@ -152,4 +161,50 @@ return require('packer').startup(function(use)
 
     -- pretty diagnostics
     use 'folke/trouble.nvim'
+
+    -- color highlighting for tailwindcss
+    use {
+        "themaxmarchuk/tailwindcss-colors.nvim",
+        module = "tailwindcss-colors",
+        config = function ()
+            require("tailwindcss-colors").setup()
+        end
+    }
+
+    -- color highlighting in general, e.g. #FFF
+    use {
+        "norcalli/nvim-colorizer.lua",
+        config = function()
+            require('colorizer').setup()
+        end
+    }
+
+    -- -- autosave
+    -- use({
+    --     "Pocco81/auto-save.nvim",
+    --     config = function()
+    --         require("auto-save").setup {}
+    --     end,
+    -- })
+
+    -- -- only highlight cursor line in active window
+    -- use {
+    --     "tummetott/reticle.nvim",
+    --     config = function()
+    --         require('reticle').setup{
+    --             on_startup = {
+    --                 cursorline = true,
+    --             },
+    --         }
+    --     end
+    -- }
+
+    -- -- presentation
+    -- use  "sotte/presenting.nvim"
+    -- use {
+    --     'aspeddro/slides.nvim',
+    --     config = function ()
+    --         require'slides'.setup{}
+    --     end
+    -- }
 end)

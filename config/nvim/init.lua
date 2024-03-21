@@ -29,12 +29,14 @@ require('formatter_tj')
 -- ------------------------------------------------------------
 -- general settings
 
+-- -- NOTE: disabled this for now, was getting on my nerves...
 require('lsp_signature').setup{
     bind = true, -- This is mandatory, otherwise border config won't get registered.
     handler_opts = {
       border = "rounded"
     },
     hint_enable = false,
+    toggle_key = "<M-k>",
 }
 
 require('Comment').setup{}
@@ -68,25 +70,30 @@ require("dracula").setup({
     transparent_bg = true,
 })
 
-require("gruvbox").setup({
-    transparent_mode = true,
-})
+-- require("gruvbox").setup({
+--     transparent_mode = true,
+-- })
 
 require('rose-pine').setup({
     disable_background = true,
     disable_float_background = true,
+
+    styles = {
+        italic = false,
+    }
 })
 
 -- vim.cmd[[colorscheme duskfox]]
--- vim.cmd[[colorscheme nightfox]]
+vim.cmd[[colorscheme nordfox]]
 -- vim.cmd[[colorscheme catppuccin]]
 -- vim.cmd[[colorscheme tokyonight]]
 -- vim.cmd[[colorscheme gruvbox]]
-vim.cmd[[colorscheme rose-pine]]
+-- vim.cmd[[colorscheme rose-pine]]
+-- vim.cmd[[colorscheme dracula]]
 
 require('lualine').setup{
     options = {
-        theme = 'rose-pine',
+        theme = 'nordfox',
         globalstatus = true,
     },
     -- sections
@@ -101,13 +108,40 @@ require('lualine').setup{
     },
 }
 
-require("nvim-tree").setup{
-  filters = {
-    custom = {"~formatter.*", "__pycache__", ".git", "venv"},
-  },
+-- require("nvim-tree").setup{
+--   filters = {
+--     custom = {"~formatter.*", "__pycache__", ".git", "venv"},
+--   },
+-- }
+
+
+require("oil").setup{
+    keymaps = {
+        ["g?"] = "actions.show_help",
+        ["<CR>"] = "actions.select",
+        -- ["<C-=>"] = "actions.select_vsplit",
+        -- ["<C-->"] = "actions.select_split",
+        ["<C-t>"] = "actions.select_tab",
+        ["<C-k>"] = "actions.preview",
+        ["<C-c>"] = "actions.close",
+        ["<C-h>"] = "<C-w>h",
+        ["<C-l>"] = "<C-w>l",
+        ["-"] = "actions.parent",
+        ["_"] = "actions.open_cwd",
+        ["`"] = "actions.cd",
+        ["~"] = "actions.tcd",
+        ["gs"] = "actions.change_sort",
+        ["gx"] = "actions.open_external",
+        ["g."] = "actions.toggle_hidden",
+        ["g\\"] = "actions.toggle_trash",
+    },
+    skip_confirm_for_simple_edits = true,
 }
-vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<cr>")
-vim.keymap.set("n", "<leader>fe", "<cmd>NvimTreeFindFile<cr>")
+
+-- view project
+vim.keymap.set("n", "<leader>pv", "<cmd>e .<cr>")
+-- view file dir
+vim.keymap.set("n", "<leader>e", "<cmd>e %:h<cr>")
 
 require('gitsigns').setup()
 vim.keymap.set("n", "<leader>hs", "<cmd>Gitsigns preview_hunk<cr>")
@@ -147,7 +181,7 @@ opt.hlsearch = false
 opt.list = true
 opt.mouse = "nv"    -- enable mouse in normal and visual modes
 opt.number = true
-opt.relativenumber = true
+opt.relativenumber = false
 opt.scrolloff = 4
 opt.shiftround = true
 opt.shiftwidth = 4
@@ -175,9 +209,12 @@ opt.undofile = true
 vim.keymap.set("n", "<leader>rn", "<cmd>set invrelativenumber<cr>")
 vim.keymap.set("n", "<leader>n", "<cmd>set invnumber invrelativenumber<cr>")
 
+vim.cmd("highlight CursorLine ctermbg=NONE guibg=#1f081f")
+vim.cmd("highlight Visual ctermbg=NONE guibg=#12123f")
+
 -- ------------------------------------------------------------
 -- telescope mappings
-local picker_opts = require('telescope.themes').get_ivy({})
+local picker_opts = require('telescope.themes').get_ivy({hidden=true})
 vim.keymap.set("n", "<C-f>",
     function()
         require('telescope.builtin').live_grep(picker_opts)
@@ -190,6 +227,8 @@ vim.keymap.set("n", "<leader>fh", require('telescope.builtin').help_tags)
 vim.keymap.set("n", "<leader>fc", require('telescope.builtin').commands)
 vim.keymap.set("n", "<leader>fr", require('telescope.builtin').resume) -- resume last searching session
 vim.keymap.set("n", "<leader>fa", require('telescope.builtin').builtin) -- show me all the builtins
+ -- find files across all projects
+vim.keymap.set("n", "<leader>fp", "<cmd>Telescope find_files find_command=rg,--ignore,--hidden,--files,/home/tsmart/work/npsg-internal-tools<CR>")
 
 -- local is_git_repo = function ()
 --     return os.execute("git rev-parse --git-dir > /dev/null 2> /dev/null") == 0
@@ -273,7 +312,7 @@ vim.api.nvim_set_keymap("n", "<leader>lg", "<cmd>lua _lazygit_toggle()<CR>", {no
 vim.keymap.set("n", "<leader><leader>e", "<cmd>tabnew ~/.config/nvim/init.lua<cr>")
 vim.keymap.set("n", "<leader><leader>l", "<cmd>e ~/.config/nvim/lua<cr>")
 vim.keymap.set("n", "<leader><leader>x", "<cmd>so<cr>")
-vim.keymap.set("n", "<leader><leader>r", "<cmd>LspRestart<cr><cmd>NvimTreeRefresh<cr><cmd>edit!<cr>")
+vim.keymap.set("n", "<leader><leader>r", "<cmd>LspRestart<cr><cmd>edit!<cr>")
 
 -- vim.keymap.set("n", "<leader>o", ":tabedit %<cr>")
 
@@ -365,6 +404,8 @@ vim.keymap.set("n", "<leader>k5", function() require("harpoon.ui").nav_file(5) e
 
 vim.keymap.set("n", "<leader>kr", require("tj").nav_and_run_first_test)  -- run the test
 vim.keymap.set("n", "<leader>k<S-R>", function() require("tj").nav_and_run_first_test{strategy = "dap"} end)  -- run the test with debug!
+
+vim.cmd("command! Pytest lua require('tj').open_last_failed_pytest()")
 
 -- ------------------------------------------------------------
 -- neotest config

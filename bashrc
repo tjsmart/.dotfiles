@@ -115,6 +115,7 @@ sipython(){
     sudo $(which ipython) $@
 }
 
+[ -d $HOME/go/bin ] && export PATH="$HOME/go/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 [ -f venv/bin/activate ] && source venv/bin/activate
@@ -143,3 +144,11 @@ fi
 
 export PIPX_DEFAULT_PYTHON=python3.10
 export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+
+# venv() {
+#     local py=$([[ -n "$1" ]] && echo "py$1" || echo "py3.10")
+#     local path=$([[ -n "$2" ]] && echo "$2" || echo "venv")
+#     $HOME/.local/bin/virtualenv -p "$py" "$path"
+#     source "$path"/bin/activate
+# }
